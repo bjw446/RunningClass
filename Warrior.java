@@ -2,13 +2,49 @@ public class Warrior extends Champion{
 
     public Warrior(String name) {
         super(name, 1, 18, 8, 6, 14,
-                160,160,100,100,12,14);}
+                140,140,100,100,12,12);}
+
+    private int useQCount = 0;
+    private int useWCount = 0;
+    private int useWStay = 0;
+    int useWBuff = (int) (staminaStat * 1.4);
+
+    public void countTurnOff(){
+        if(useQCount > 0) {
+            useQCount = useQCount - 1;
+        }
+        if(useWCount > 0) {
+            useWCount = useWCount - 1;
+        }
+        if(useWStay > 0) {
+            useWStay = useWStay - 1;
+            if(useWStay == 0) {
+                defense = defense - useWBuff;
+                System.out.println(getName() + "의 아이언 월 효과가 사라졌습니다.");
+            }
+        }
+        passive();
+    }
+    @Override
+    public void basicAttack(Champion target) {
+        double fatalDamage = 0;
+        if(Math.random() < GameConstans.WARRIOR_FATALRATE_CHARACTERISTIC) {
+            System.out.println(getName() + " 치명타 공격! -> " + target.getName());
+            fatalDamage = attackDamage + (agilityStat * GameConstans.WARRIOR_FATALDAMAGE_CHARACTERISTIC);
+            target.takeDamage((int)fatalDamage);
+            countTurnOff();
+        } else {
+            System.out.println(getName() + " 기본 공격 -> " + target.getName());
+            target.takeDamage(attackDamage);
+            countTurnOff();
+        }
+    }
 
     @Override
     public void character() {
         attackDamage = attackDamage + (int) (powerStat * GameConstans.WARRIOR_POWERSTAT_CHARACTERISTIC);
         defense = defense + (int) (staminaStat * GameConstans.WARRIOR_STAMINASTAT_CHARACTERISTIC);
-        hp = hp + (int) (staminaStat * GameConstans.WARRIOR_STAMINASTAT_CHARACTERISTIC * 4);
+        hp = hp + (int) (staminaStat * GameConstans.WARRIOR_STAMINASTAT_CHARACTERISTIC * 3.5);
         maxHp = hp;
         mp = mp + (int) (intelligenceStat * GameConstans.WARRIOR_INTELLIGENCESTAT_CHARACTERISTIC * 4);
         maxMp = mp;
@@ -16,29 +52,49 @@ public class Warrior extends Champion{
 
     @Override
     public void useQ(Champion target) {
-        System.out.println("파워 스트라이크 !");
-        if(getMp() < 10) {
-            System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
-            basicAttack(target,GameConstans.WARRIOR_FATALRATE_CHARACTERISTIC,GameConstans.WARRIOR_FATALDAMAGE_CHARACTERISTIC);
-            passive();
+        if(useQCount == 0) {
+            if(getMp() < 50) {
+                System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
+                basicAttack(target);
+            } else if(getMp() > 50 && useQCount != 0) {
+                System.out.println("파워 스트라이크 재사용 턴이 아직 남아 있습니다.");
+                System.out.println("남은 재사용 턴 : " + useQCount);
+                basicAttack(target);
+            }else {
+                mp = mp - 50;
+                System.out.println(getName() + "의 파워 스트라이크 ! (남은 MP : " + mp + ")");
+                target.takeDamage(getAttackDamage() + (int)(powerStat*1.5));
+                useQCount = 3;
+            }
         }else {
-            target.takeDamage(getAttackDamage() + (int)(powerStat*1.5));
-            mp = mp - 10;
-            passive();
+            System.out.println("파워 스트라이크 재사용 턴이 아직 남아 있습니다.");
+            System.out.println("남은 재사용 턴 : " + useQCount);
+            basicAttack(target);
         }
     }
 
     @Override
     public void useW(Champion target) {
-        System.out.println("아이언 월 ! ");
-        if(getMp() < 15) {
-            System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
-            basicAttack(target,GameConstans.WARRIOR_FATALRATE_CHARACTERISTIC,GameConstans.WARRIOR_FATALDAMAGE_CHARACTERISTIC);
-            passive();
+        if(useWCount == 0) {
+            if(getMp() < 55) {
+                System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
+                basicAttack(target);
+            } else if(getMp() > 55 && useWCount != 0) {
+                System.out.println("아이언 월 재사용 턴이 아직 남아 있습니다.");
+                System.out.println("남은 재사용 턴 : " + useWCount);
+                basicAttack(target);
+            }else {
+                mp = mp - 55;
+                System.out.println(getName() + "의 아이언 월 ! (남은 MP : " + mp + ")");
+                defense = defense + useWBuff;
+                System.out.println("방어력 : " + useWBuff +" 증가, 현재 방어력 : " + defense + ")");
+                useWCount = 4;
+                useWStay = 2;
+            }
         }else {
-            defense = defense + staminaStat * 2;
-            mp = mp - 15;
-            passive();
+            System.out.println("아이언 월 재사용 턴이 아직 남아 있습니다.");
+            System.out.println("남은 재사용 턴 : " + useWCount);
+            basicAttack(target);
         }
     }
 

@@ -32,26 +32,35 @@ public abstract class Champion {
         createdCount++;
 
     }
-
-    public void basicAttack(Champion target, double fatalrate, double fatalCharacteristic) {
-        double fatalDamage = 0;
-        if(Math.random() < fatalrate) {
-            System.out.println(name + " 치명타 공격! -> " + target.name);
-            fatalDamage = attackDamage + (agilityStat * fatalCharacteristic);
-            target.takeDamage(fatalDamage);
-        } else {
-            System.out.println(name + " 기본 공격 -> " + target.name);
-            target.takeDamage(attackDamage);
+    public void takeDamage(int damage) {
+        if(hp <= 0) {
+            System.out.println("챔피언이 사망 하였습니다.");
+            alive();
+            return;
+        }
+        if(Math.random() < agilityStat * 0.015) {
+            System.out.println("Miss!! 공격을 회피 했습니다!");
+        }else {
+            int actualDamage = damage - defense;
+            if (actualDamage <= 0) {
+                actualDamage = 0;
+            }
+            if(hp - actualDamage < 0) {
+                actualDamage = actualDamage - hp;
+                hp = 0;
+                System.out.println(name + " " + actualDamage + " 피해를 입었습니다. (남은 HP : " + hp + ")");
+            }else {
+                hp = (int) (hp - actualDamage);
+                System.out.println(name + " " + actualDamage + " 피해를 입었습니다. (남은 HP : " + hp + ")");
+            }
         }
     }
-
-    public void takeDamage(double damage) {
-        double actualDamage = damage - defense;
-        if (actualDamage <= 0) {
-            actualDamage = 0;
+    public boolean alive() {
+        if (hp <= 0) {
+            System.out.println(name + " 사망하여 패배 !!");
+            return false;
         }
-        hp = (int) (hp - actualDamage);
-        System.out.println(name + "이(가) " + actualDamage + "피해를 입었습니다. (남은 HP : " + hp + ")");
+        return true;
     }
     public void levelUp(){
         if(level >= GameConstans.MAX_LEVEL) {
@@ -69,22 +78,29 @@ public abstract class Champion {
     }
     public void recoverMp(double chance, double characteristic) {
         if(Math.random() < chance) {
-            mp = (int) (mp + (maxMp * 0.02) + (intelligenceStat * characteristic));
+            if((int) (mp + (maxMp * 0.02) + (intelligenceStat * characteristic)) >= maxMp){
+                mp = maxMp;
+            }else{
+                mp = (int) (mp + (maxMp * 0.02) + (intelligenceStat * characteristic));
+                System.out.println(name + "의 마나 재생 (현재 MP : " + mp + ")");
+            }
         }
     }
     public void recoverHp(double chance, double characteristic) {
         if(Math.random() < chance){
-            hp = (int) (hp + (maxHp * 0.02) + (staminaStat * characteristic));
+            if((int) (hp + (maxHp * 0.02) + (staminaStat * characteristic)) >= maxHp){
+                hp = maxHp;
+            }else{
+                hp = (int) (hp + (maxHp * 0.02) + (staminaStat * characteristic));
+                System.out.println(name + "의 체력 재생 (현재 HP : " + hp + ")");
+            }
         }
     }
 
 
 
 
-
-
-
-
+    public abstract void basicAttack(Champion target);
     public abstract void character();
     public abstract void useQ(Champion target);
     public abstract void useW(Champion target);
