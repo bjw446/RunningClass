@@ -10,7 +10,7 @@ public class Archer extends Champion{
     private int useWBuff = (int) (agilityStat * 0.35);
     private int useWBuff2 = (int) (powerStat * 0.15);
     private int useECount = 0;
-    private int useRCount = 3;
+    private int useRCount = 2;
 
     public void countTurnOff(){
         if(useQCount > 0) {
