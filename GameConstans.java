@@ -20,7 +20,7 @@ public final class GameConstans {
     public static final double WIZARD_MP_CHARACTERISTIC = 0.3;
     public static final double WIZARD_POWERSTAT_CHARACTERISTIC = 0.7;
     public static final double WIZARD_AGLITYSTAT_CHARACTERISTIC = 0.8;
-    public static final double WIZARD_INTELLIGENCESTAT_CHARACTERISTIC = 1.2;
+    public static final double WIZARD_INTELLIGENCESTAT_CHARACTERISTIC = 1.4;
     public static final double WIZARD_STAMINASTAT_CHARACTERISTIC = 0.9;
     public static final double WIZARD_FATALRATE_CHARACTERISTIC = 0.05;
     public static final double WIZARD_FATALDAMAGE_CHARACTERISTIC = 0.7;

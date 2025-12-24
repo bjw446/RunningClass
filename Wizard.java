@@ -9,7 +9,7 @@ public class Wizard extends Champion{
     private int useWStay = 0;
     private int useWBuff = (int) (intelligenceStat * 1.2);
     private int useECount = 0;
-    private int useRCount = 3;
+    private int useRCount = 2;
 
     public void countTurnOff(){
         if(useQCount > 0) {
@@ -62,15 +62,15 @@ public class Wizard extends Champion{
     @Override
     public void useQ(Champion target) {
         if(useQCount == 0) {
-            if(getMp() < 70) {
+            if(getMp() < 60) {
                 System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
                 basicAttack(target);
-            } else if(getMp() > 70 && useQCount != 0) {
+            } else if(getMp() > 60 && useQCount != 0) {
                 System.out.println("파이어볼 재사용 턴이 아직 남아 있습니다.");
                 System.out.println("남은 재사용 턴 : " + useQCount);
                 basicAttack(target);
             }else {
-                mp = mp - 70;
+                mp = mp - 60;
                 System.out.println(getName() + "의 파이어볼 ! (남은 MP : " + mp + ")");
                 target.takeDamage((int) (intelligenceStat*2.2));
                 useQCount = 2;
@@ -110,15 +110,15 @@ public class Wizard extends Champion{
     @Override
     public void useE(Champion target) {
         if(useECount == 0) {
-            if(getMp() < 75) {
+            if(getMp() < 70) {
                 System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
                 basicAttack(target);
-            } else if(getMp() > 75 && useECount != 0) {
+            } else if(getMp() > 70 && useECount != 0) {
                 System.out.println("라이트닝 볼트 재사용 턴이 아직 남아 있습니다.");
                 System.out.println("남은 재사용 턴 : " + useECount);
                 basicAttack(target);
             }else {
-                mp = mp - 75;
+                mp = mp - 70;
                 System.out.println(getName() + "의 라이트닝 볼트 ! (남은 MP : " + mp + ")");
                 target.takeDamage((int) (intelligenceStat*2.5));
                 useECount = 3;

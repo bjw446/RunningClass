@@ -9,7 +9,7 @@ public class Assassin extends Champion{
     private int useWStay = 0;
     private int useWBuff = (int) (agilityStat * 0.65);
     private int useECount = 0;
-    private int useRCount = 3;
+    private int useRCount = 2;
 
     public void countTurnOff(){
         if(useQCount > 0) {
@@ -152,7 +152,7 @@ public class Assassin extends Champion{
                 mp = mp - 100;
                 System.out.println(getName() + "의 블레이드 댄스 ! (남은 MP : " + mp + ")");
                 target.takeDamage(getAttackDamage() + (int)(agilityStat*3.0));
-                useRCount = 7;
+                useRCount = 6;
             }
         }else {
             System.out.println("블레이드 댄스 재사용 턴이 아직 남아 있습니다.");

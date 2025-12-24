@@ -9,7 +9,7 @@ public class Warrior extends Champion{
     private int useWStay = 0;
     private int useWBuff = (int) (staminaStat * 1.4);
     private int useECount = 0;
-    private int useRCount = 3;
+    private int useRCount = 2;
 
     public void countTurnOff(){
         if(useQCount > 0) {
