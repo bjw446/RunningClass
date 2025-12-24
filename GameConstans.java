@@ -29,8 +29,8 @@ public final class GameConstans {
     public static final double ARCHER_MP_RECOVER_CHANCE = 0.2;
     public static final double ARCHER_HP_CHARACTERISTIC = 0.25;
     public static final double ARCHER_MP_CHARACTERISTIC = 0.25;
-    public static final double ARCHER_POWERSTAT_CHARACTERISTIC = 1.0;
-    public static final double ARCHER_AGLITYSTAT_CHARACTERISTIC = 1.5;
+    public static final double ARCHER_POWERSTAT_CHARACTERISTIC = 0.6;
+    public static final double ARCHER_AGLITYSTAT_CHARACTERISTIC = 0.9;
     public static final double ARCHER_INTELLIGENCESTAT_CHARACTERISTIC = 0.9;
     public static final double ARCHER_STAMINASTAT_CHARACTERISTIC = 0.8;
     public static final double ARCHER_FATALRATE_CHARACTERISTIC = 0.08;

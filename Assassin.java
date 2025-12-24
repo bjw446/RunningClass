@@ -7,7 +7,9 @@ public class Assassin extends Champion{
     private int useQCount = 0;
     private int useWCount = 0;
     private int useWStay = 0;
-    int useWBuff = (int) (agilityStat * 0.65);
+    private int useWBuff = (int) (agilityStat * 0.65);
+    private int useECount = 0;
+    private int useRCount = 3;
 
     public void countTurnOff(){
         if(useQCount > 0) {
@@ -22,6 +24,12 @@ public class Assassin extends Champion{
                 agilityStat = agilityStat - useWBuff;
                 System.out.println(getName() + "의 쉐도우 스텝 효과가 사라졌습니다.");
             }
+        }
+        if(useECount > 0) {
+            useECount = useECount - 1;
+        }
+        if(useRCount > 0) {
+            useRCount = useRCount - 1;
         }
         passive();
     }
@@ -95,6 +103,60 @@ public class Assassin extends Champion{
         }else {
             System.out.println("쉐도우 스텝 재사용 턴이 아직 남아 있습니다.");
             System.out.println("남은 재사용 턴 : " + useWCount);
+            basicAttack(target);
+        }
+    }
+
+    @Override
+    public void useE(Champion target) {
+        if(useECount == 0) {
+            if(getMp() < 60) {
+                System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
+                basicAttack(target);
+            } else if(getMp() > 60 && useECount != 0) {
+                System.out.println("블러드 리퍼 재사용 턴이 아직 남아 있습니다.");
+                System.out.println("남은 재사용 턴 : " + useECount);
+                basicAttack(target);
+            }else {
+                mp = mp - 60;
+                System.out.println(getName() + "의 블러드 리퍼 ! (남은 MP : " + mp + ")");
+                target.takeDamage(getAttackDamage() + (int)(agilityStat*2.2));
+                if(hp + (int)(agilityStat*2.2) >= maxHp){
+                    int realRecover = maxHp - hp;
+                    hp = maxHp;
+                    System.out.println("블러드 리퍼 흡혈 효과 : " + realRecover + " (남은 HP : " + hp + ")");
+                }else{
+                    hp = hp + (int)(agilityStat*2.2);
+                    System.out.println("블러드 리퍼 흡혈 효과 : " + (int)(agilityStat*2.2) + " (남은 HP : " + hp + ")");
+                }
+                useECount = 4;
+            }
+        }else {
+            System.out.println("블러드 리퍼 재사용 턴이 아직 남아 있습니다.");
+            System.out.println("남은 재사용 턴 : " + useECount);
+            basicAttack(target);
+        }
+    }
+
+    @Override
+    public void useR(Champion target) {
+        if(useRCount == 0) {
+            if(getMp() < 100) {
+                System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
+                basicAttack(target);
+            } else if(getMp() > 100 && useRCount != 0) {
+                System.out.println("블레이드 댄스 재사용 턴이 아직 남아 있습니다.");
+                System.out.println("남은 재사용 턴 : " + useRCount);
+                basicAttack(target);
+            }else {
+                mp = mp - 100;
+                System.out.println(getName() + "의 블레이드 댄스 ! (남은 MP : " + mp + ")");
+                target.takeDamage(getAttackDamage() + (int)(agilityStat*3.0));
+                useRCount = 7;
+            }
+        }else {
+            System.out.println("블레이드 댄스 재사용 턴이 아직 남아 있습니다.");
+            System.out.println("남은 재사용 턴 : " + useRCount);
             basicAttack(target);
         }
     }

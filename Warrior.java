@@ -7,7 +7,9 @@ public class Warrior extends Champion{
     private int useQCount = 0;
     private int useWCount = 0;
     private int useWStay = 0;
-    int useWBuff = (int) (staminaStat * 1.4);
+    private int useWBuff = (int) (staminaStat * 1.4);
+    private int useECount = 0;
+    private int useRCount = 3;
 
     public void countTurnOff(){
         if(useQCount > 0) {
@@ -22,6 +24,12 @@ public class Warrior extends Champion{
                 defense = defense - useWBuff;
                 System.out.println(getName() + "의 아이언 월 효과가 사라졌습니다.");
             }
+        }
+        if(useECount > 0) {
+            useECount = useECount - 1;
+        }
+        if(useRCount > 0) {
+            useRCount = useRCount - 1;
         }
         passive();
     }
@@ -94,6 +102,52 @@ public class Warrior extends Champion{
         }else {
             System.out.println("아이언 월 재사용 턴이 아직 남아 있습니다.");
             System.out.println("남은 재사용 턴 : " + useWCount);
+            basicAttack(target);
+        }
+    }
+
+    @Override
+    public void useE(Champion target) {
+        if(useECount == 0) {
+            if(getMp() < 65) {
+                System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
+                basicAttack(target);
+            } else if(getMp() > 65 && useECount != 0) {
+                System.out.println("파워 슬래시 재사용 턴이 아직 남아 있습니다.");
+                System.out.println("남은 재사용 턴 : " + useECount);
+                basicAttack(target);
+            }else {
+                mp = mp - 65;
+                System.out.println(getName() + "의 파워 슬래시 ! (남은 MP : " + mp + ")");
+                target.takeDamage(getAttackDamage() + (int)(powerStat*1.8));
+                useECount = 3;
+            }
+        }else {
+            System.out.println("파워 슬래시 재사용 턴이 아직 남아 있습니다.");
+            System.out.println("남은 재사용 턴 : " + useECount);
+            basicAttack(target);
+        }
+    }
+
+    @Override
+    public void useR(Champion target) {
+        if(useRCount == 0) {
+            if(getMp() < 90) {
+                System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
+                basicAttack(target);
+            } else if(getMp() > 90 && useRCount != 0) {
+                System.out.println("영웅의 일격 재사용 턴이 아직 남아 있습니다.");
+                System.out.println("남은 재사용 턴 : " + useRCount);
+                basicAttack(target);
+            }else {
+                mp = mp - 90;
+                System.out.println(getName() + "의 영웅의 일격 ! (남은 MP : " + mp + ")");
+                target.takeDamage(getAttackDamage() + (int)(powerStat*3.0));
+                useRCount = 6;
+            }
+        }else {
+            System.out.println("영웅의 일격 재사용 턴이 아직 남아 있습니다.");
+            System.out.println("남은 재사용 턴 : " + useRCount);
             basicAttack(target);
         }
     }

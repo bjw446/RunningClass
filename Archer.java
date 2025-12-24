@@ -7,7 +7,10 @@ public class Archer extends Champion{
     private int useQCount = 0;
     private int useWCount = 0;
     private int useWStay = 0;
-    int useWBuff = defense - 2;;
+    private int useWBuff = (int) (agilityStat * 0.35);
+    private int useWBuff2 = (int) (powerStat * 0.15);
+    private int useECount = 0;
+    private int useRCount = 3;
 
     public void countTurnOff(){
         if(useQCount > 0) {
@@ -15,6 +18,20 @@ public class Archer extends Champion{
         }
         if(useWCount > 0) {
             useWCount = useWCount - 1;
+        }
+        if(useWStay > 0) {
+            useWStay = useWStay - 1;
+            if(useWStay == 0) {
+                agilityStat = agilityStat - useWBuff;
+                powerStat = powerStat - useWBuff2;
+                System.out.println(getName() + "의 사냥 본능 효과가 사라졌습니다.");
+            }
+        }
+        if(useECount > 0) {
+            useECount = useECount - 1;
+        }
+        if(useRCount > 0) {
+            useRCount = useRCount - 1;
         }
         passive();
     }
@@ -36,7 +53,8 @@ public class Archer extends Champion{
 
     @Override
     public void character() {
-        attackDamage = attackDamage + (int) (agilityStat * GameConstans.ARCHER_AGLITYSTAT_CHARACTERISTIC);
+        attackDamage = attackDamage + (int) (agilityStat * GameConstans.ARCHER_AGLITYSTAT_CHARACTERISTIC)
+        + (int) (powerStat * GameConstans.ARCHER_POWERSTAT_CHARACTERISTIC);
         defense = defense + (int) (staminaStat * GameConstans.ARCHER_STAMINASTAT_CHARACTERISTIC);
         hp = hp + (int) (staminaStat * GameConstans.ARCHER_STAMINASTAT_CHARACTERISTIC * 4);
         maxHp = hp;
@@ -57,8 +75,8 @@ public class Archer extends Champion{
             }else {
                 mp = mp - 60;
                 System.out.println(getName() + "의 더블샷 ! (남은 MP : " + mp + ")");
-                target.takeDamage(getAttackDamage() + (int)(agilityStat*0.6));
-                target.takeDamage(getAttackDamage() + (int)(agilityStat*0.6));
+                target.takeDamage(getAttackDamage() + (int)(agilityStat*0.4) + (int)(powerStat*0.2));
+                target.takeDamage(getAttackDamage() + (int)(agilityStat*0.4) + (int)(powerStat*0.2));
                 useQCount = 3;
             }
         }else {
@@ -71,22 +89,72 @@ public class Archer extends Champion{
     @Override
     public void useW(Champion target) {
         if(useWCount == 0) {
+            if(getMp() < 55) {
+                System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
+                basicAttack(target);
+            } else if(getMp() > 55 && useWCount != 0) {
+                System.out.println("사냥 본능 재사용 턴이 아직 남아 있습니다.");
+                System.out.println("남은 재사용 턴 : " + useWCount);
+                basicAttack(target);
+            }else {
+                mp = mp - 55;
+                System.out.println(getName() + "의 사냥 본능 ! (남은 MP : " + mp + ")");
+                agilityStat = agilityStat + useWBuff;
+                powerStat = powerStat + useWBuff2;
+                System.out.println("민첩성 : " + useWBuff +" 증가, 현재 민첩성 : " + agilityStat + ")");
+                System.out.println("근력 : " + useWBuff2 +" 증가, 현재 근력 : " + powerStat + ")");
+                useWCount = 4;
+                useWStay = 2;
+            }
+        }else {
+            System.out.println("사냥 본능 재사용 턴이 아직 남아 있습니다.");
+            System.out.println("남은 재사용 턴 : " + useWCount);
+            basicAttack(target);
+        }
+    }
+
+    @Override
+    public void useE(Champion target) {
+        if(useECount == 0) {
             if(getMp() < 65) {
                 System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
                 basicAttack(target);
-            } else if(getMp() > 65 && useWCount != 0) {
+            } else if(getMp() > 65 && useECount != 0) {
                 System.out.println("피어싱 애로우 재사용 턴이 아직 남아 있습니다.");
-                System.out.println("남은 재사용 턴 : " + useQCount);
+                System.out.println("남은 재사용 턴 : " + useECount);
                 basicAttack(target);
             }else {
                 mp = mp - 65;
                 System.out.println(getName() + "의 피어싱 애로우 ! (남은 MP : " + mp + ")");
-                target.takeDamage(getAttackDamage() + (int)(agilityStat*1.5));
-                useWCount = 4;
+                target.takeDamage(getAttackDamage() + (int)(agilityStat*1.0) + (int)(powerStat*0.5));
+                useECount = 4;
             }
         }else {
             System.out.println("피어싱 애로우 재사용 턴이 아직 남아 있습니다.");
-            System.out.println("남은 재사용 턴 : " + useQCount);
+            System.out.println("남은 재사용 턴 : " + useECount);
+            basicAttack(target);
+        }
+    }
+
+    @Override
+    public void useR(Champion target) {
+        if(useRCount == 0) {
+            if(getMp() < 95) {
+                System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
+                basicAttack(target);
+            } else if(getMp() > 95 && useRCount != 0) {
+                System.out.println("데스 애로우 재사용 턴이 아직 남아 있습니다.");
+                System.out.println("남은 재사용 턴 : " + useRCount);
+                basicAttack(target);
+            }else {
+                mp = mp - 95;
+                System.out.println(getName() + "의 데스 애로우 ! (남은 MP : " + mp + ")");
+                target.takeDamage(getAttackDamage() + (int)(agilityStat*1.8) + (int)(powerStat*1.0));
+                useECount = 6;
+            }
+        }else {
+            System.out.println("데스 애로우 재사용 턴이 아직 남아 있습니다.");
+            System.out.println("남은 재사용 턴 : " + useRCount);
             basicAttack(target);
         }
     }

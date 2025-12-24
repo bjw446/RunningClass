@@ -46,7 +46,7 @@ public abstract class Champion {
                 actualDamage = 0;
             }
             if(hp - actualDamage < 0) {
-                actualDamage = actualDamage - hp;
+                actualDamage = hp;
                 hp = 0;
                 System.out.println(name + " " + actualDamage + " 피해를 입었습니다. (남은 HP : " + hp + ")");
             }else {
@@ -104,6 +104,8 @@ public abstract class Champion {
     public abstract void character();
     public abstract void useQ(Champion target);
     public abstract void useW(Champion target);
+    public abstract void useE(Champion target);
+    public abstract void useR(Champion target);
     public abstract void passive();
     public String getName() {
         return name;
