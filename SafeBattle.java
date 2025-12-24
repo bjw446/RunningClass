@@ -26,7 +26,7 @@ public class SafeBattle {
         System.out.println(champion1.getName() + " VS " + champion2.getName());
 
         while (champion1.alive() && champion2.alive()) {
-            int choice = random.nextInt(3);
+            int choice = random.nextInt(5);
             if(champion1.alive()){
                 switch (choice){
                     case 0 :
@@ -36,11 +36,17 @@ public class SafeBattle {
                         champion1.useW(champion2);
                         break;
                     case 2 :
+                        champion1.useE(champion2);
+                        break;
+                    case 3 :
+                        champion1.useR(champion2);
+                        break;
+                    case 4 :
                         champion1.basicAttack(champion2);
                         break;
                 }
             }
-            int choice2 = random.nextInt(3);
+            int choice2 = random.nextInt(5);
             if(champion2.alive()){
                 switch (choice2){
                     case 0 :
@@ -50,6 +56,12 @@ public class SafeBattle {
                         champion2.useW(champion1);
                         break;
                     case 2 :
+                        champion2.useE(champion1);
+                        break;
+                    case 3 :
+                        champion2.useR(champion1);
+                        break;
+                    case 4 :
                         champion2.basicAttack(champion1);
                         break;
                 }

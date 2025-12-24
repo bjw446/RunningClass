@@ -7,7 +7,9 @@ public class Wizard extends Champion{
     private int useQCount = 0;
     private int useWCount = 0;
     private int useWStay = 0;
-    int useWBuff = (int) (intelligenceStat * 1.2);
+    private int useWBuff = (int) (intelligenceStat * 1.2);
+    private int useECount = 0;
+    private int useRCount = 3;
 
     public void countTurnOff(){
         if(useQCount > 0) {
@@ -22,6 +24,12 @@ public class Wizard extends Champion{
                 defense = defense - useWBuff;
                 System.out.println(getName() + "의 아케인 쉴드 효과가 사라졌습니다.");
             }
+        }
+        if(useECount > 0) {
+            useECount = useECount - 1;
+        }
+        if(useRCount > 0) {
+            useRCount = useRCount - 1;
         }
         passive();
     }
@@ -64,7 +72,7 @@ public class Wizard extends Champion{
             }else {
                 mp = mp - 70;
                 System.out.println(getName() + "의 파이어볼 ! (남은 MP : " + mp + ")");
-                target.takeDamage((int) (intelligenceStat*2.5));
+                target.takeDamage((int) (intelligenceStat*2.2));
                 useQCount = 2;
             }
         }else {
@@ -95,6 +103,52 @@ public class Wizard extends Champion{
         }else {
             System.out.println("아케인 쉴드 재사용 턴이 아직 남아 있습니다.");
             System.out.println("남은 재사용 턴 : " + useWCount);
+            basicAttack(target);
+        }
+    }
+
+    @Override
+    public void useE(Champion target) {
+        if(useECount == 0) {
+            if(getMp() < 75) {
+                System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
+                basicAttack(target);
+            } else if(getMp() > 75 && useECount != 0) {
+                System.out.println("라이트닝 볼트 재사용 턴이 아직 남아 있습니다.");
+                System.out.println("남은 재사용 턴 : " + useECount);
+                basicAttack(target);
+            }else {
+                mp = mp - 75;
+                System.out.println(getName() + "의 라이트닝 볼트 ! (남은 MP : " + mp + ")");
+                target.takeDamage((int) (intelligenceStat*2.5));
+                useECount = 3;
+            }
+        }else {
+            System.out.println("라이트닝 볼트 재사용 턴이 아직 남아 있습니다.");
+            System.out.println("남은 재사용 턴 : " + useECount);
+            basicAttack(target);
+        }
+    }
+
+    @Override
+    public void useR(Champion target) {
+        if(useRCount == 0) {
+            if(getMp() < 100) {
+                System.out.println("마나가 부족하여 스킬을 사용할 수 없습니다.");
+                basicAttack(target);
+            } else if(getMp() > 100 && useRCount != 0) {
+                System.out.println("엘리먼트 블라스트 턴이 아직 남아 있습니다.");
+                System.out.println("남은 재사용 턴 : " + useRCount);
+                basicAttack(target);
+            }else {
+                mp = mp - 100;
+                System.out.println(getName() + "의 엘리먼트 블라스트 ! (남은 MP : " + mp + ")");
+                target.takeDamage((int) (intelligenceStat*3.0));
+                useRCount = 6;
+            }
+        }else {
+            System.out.println("엘리먼트 블라스트 재사용 턴이 아직 남아 있습니다.");
+            System.out.println("남은 재사용 턴 : " + useRCount);
             basicAttack(target);
         }
     }
